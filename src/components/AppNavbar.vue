@@ -1,6 +1,6 @@
 <template>
-  <nav class="navbar navbar-expand navbar-dark bg-dark shadow-sm">
-    <div class="collapse navbar-collapse justify-content-between">
+  <div @click.stop="log">
+    <b-navbar>
       <ul class="navbar-nav">
         <router-link tag="li" class="nav-item" to="/">
           <a class="nav-link">Home</a>
@@ -9,24 +9,32 @@
           <a class="nav-link">Books</a>
         </router-link>
       </ul>
-      <button v-if="isLoggedIn" class="btn btn-light" @click="logout">
+      <button v-if="isLoggedIn" class="btn btn-light" @click.stop="logout">
         Logout
       </button>
-    </div>
-  </nav>
+    </b-navbar>
+  </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import BNavbar from "./bootstrap/BNavbar.vue";
 import { deleteCookie } from "../utils/cookiehelper";
 
 export default {
+  name: "AppNavbar",
+  components: {
+    BNavbar
+  },
   computed: {
     ...mapGetters({
       isLoggedIn: "user/isLoggedIn"
     })
   },
   methods: {
+    ...mapActions("user", {
+      logoutUser: "logoutUser"
+    }),
     logout() {
       this.$snotify.async(
         "Logging out",
@@ -56,10 +64,7 @@ export default {
               });
           })
       );
-    },
-    ...mapActions("user", {
-      logoutUser: "logoutUser"
-    })
+    }
   }
 };
 </script>
