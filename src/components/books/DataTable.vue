@@ -57,6 +57,7 @@
           class="btn btn-dark"
           :disabled="!links.prev"
           @click.stop="loadFirst"
+          title="First Page"
         >
           <i class="fa fa-angle-double-left"></i>
         </button>
@@ -64,6 +65,7 @@
           class="btn btn-dark"
           :disabled="!links.prev"
           @click.stop="loadPrev"
+          title="Previous Page"
         >
           <i class="fa fa-angle-left"></i>
         </button>
@@ -86,6 +88,7 @@
           class="btn btn-dark"
           :disabled="!links.next"
           @click.stop="loadNext"
+          title="Next Page"
         >
           <i class="fa fa-angle-right"></i>
         </button>
@@ -93,6 +96,7 @@
           class="btn btn-dark"
           :disabled="!links.next"
           @click.stop="loadLast"
+          title="Last Page"
         >
           <i class="fa fa-angle-double-right"></i>
         </button>
