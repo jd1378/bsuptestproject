@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand navbar-dark bg-dark shadow-sm">
     <div class="collapse navbar-collapse justify-content-between">
-      <slot #default>
+      <slot>
         <ul class="navbar-nav">
           <router-link tag="li" class="nav-item" to="/">
             <a class="nav-link">Home</a>
