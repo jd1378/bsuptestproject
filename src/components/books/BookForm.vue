@@ -1,86 +1,88 @@
 <template>
-  <form @submit.prevent="submit">
-    <div class="card text-center">
-      <div class="card-header d-flex justify-content-between">
-        <button class="btn btn-danger" @click.stop="cancel">
-          Cancel
-        </button>
-        <h4>{{ this.editing ? "Edit Book" : "Add Book" }}</h4>
-        <button type="submit" class="btn btn-success">
-          {{ editing ? "Done" : "Submit" }}
-        </button>
-      </div>
-      <Error
-        v-for="(errormsg, index) in errors"
-        :key="index"
-        class="m-2"
-        :msg="errormsg"
-      ></Error>
-      <fieldset :disabled="submitting">
-        <div
-          class="card-body d-flex justify-content-start align-content-center"
-        >
-          <div class="col-3" v-if="book.cover_url">
-            <img
-              :src="book.cover_url"
-              alt="Book Cover Image"
-              class="img-thumbnail"
-            />
-          </div>
-          <div class="d-flex flex-wrap justify-content-center">
-            <div class="form-group col-md-4 mb-3">
-              <label>Title</label>
-              <input
-                type="text"
-                name="title"
-                class="form-control"
-                required=""
-                v-model="book.title"
-              />
-            </div>
-            <div class="form-group col-md-4 mb-3">
-              <label>Author</label>
-              <input
-                type="text"
-                name="author"
-                class="form-control"
-                required=""
-                v-model="book.author"
-              />
-            </div>
-            <div class="form-group col-md-4 mb-3">
-              <label>Price</label>
-              <input
-                type="number"
-                name="price"
-                class="form-control"
-                required=""
-                v-model="book.price"
-              />
-            </div>
-            <div class="form-group col-md-4 mb-3">
-              <label>Publisher</label>
-              <input
-                type="text"
-                name="publisher"
-                class="form-control"
-                v-model="book.publisher"
-              />
-            </div>
-            <div class="form-group col-md-4 mb-3">
-              <label>Cover Url</label>
-              <input
-                type="text"
-                name="cover_url"
-                class="form-control"
-                v-model="book.cover_url"
-              />
-            </div>
-          </div>
+  <div class="container p-3">
+    <form @submit.prevent="submit">
+      <div class="card text-center">
+        <div class="card-header d-flex justify-content-between">
+          <button class="btn btn-danger" @click.stop="cancel">
+            Cancel
+          </button>
+          <h4>{{ this.editing ? "Edit Book" : "Add Book" }}</h4>
+          <button type="submit" class="btn btn-success">
+            {{ editing ? "Done" : "Submit" }}
+          </button>
         </div>
-      </fieldset>
-    </div>
-  </form>
+        <Error
+          v-for="(errormsg, index) in errors"
+          :key="index"
+          class="m-2"
+          :msg="errormsg"
+        ></Error>
+        <fieldset :disabled="submitting">
+          <div
+            class="card-body d-flex justify-content-start align-content-center"
+          >
+            <div class="col-3" v-if="book.cover_url">
+              <img
+                :src="book.cover_url"
+                alt="Book Cover Image"
+                class="img-thumbnail"
+              />
+            </div>
+            <div class="d-flex flex-wrap justify-content-center">
+              <div class="form-group col-md-4 mb-3">
+                <label>Title</label>
+                <input
+                  type="text"
+                  name="title"
+                  class="form-control"
+                  required=""
+                  v-model="book.title"
+                />
+              </div>
+              <div class="form-group col-md-4 mb-3">
+                <label>Author</label>
+                <input
+                  type="text"
+                  name="author"
+                  class="form-control"
+                  required=""
+                  v-model="book.author"
+                />
+              </div>
+              <div class="form-group col-md-4 mb-3">
+                <label>Price</label>
+                <input
+                  type="number"
+                  name="price"
+                  class="form-control"
+                  required=""
+                  v-model="book.price"
+                />
+              </div>
+              <div class="form-group col-md-4 mb-3">
+                <label>Publisher</label>
+                <input
+                  type="text"
+                  name="publisher"
+                  class="form-control"
+                  v-model="book.publisher"
+                />
+              </div>
+              <div class="form-group col-md-4 mb-3">
+                <label>Cover Url</label>
+                <input
+                  type="text"
+                  name="cover_url"
+                  class="form-control"
+                  v-model="book.cover_url"
+                />
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </form>
+  </div>
 </template>
 
 <script>
