@@ -1,5 +1,5 @@
 <template>
-  <div @click.stop="log">
+  <div>
     <b-navbar>
       <ul class="navbar-nav">
         <router-link tag="li" class="nav-item" to="/">
