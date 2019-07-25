@@ -83,6 +83,15 @@
                 :disabled="!isChangingPass"
               />
             </div>
+            <div class="col-md-4 mb-3">
+              <button
+                class="btn btn-danger"
+                type="button"
+                @click.stop="deleteAccount"
+              >
+                Delete Account
+              </button>
+            </div>
           </div>
         </div>
         <div v-if="editmode" class="card-footer d-flex justify-content-between">
@@ -124,6 +133,39 @@ export default {
     }
   },
   methods: {
+    deleteAccount() {
+      this.$snotify.confirm("Are you sure ?", "Delete Account", {
+        timeout: 3000,
+        showProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: true,
+        buttons: [
+          {
+            text: "Yes",
+            action: toast => {
+              userService
+                .deleteUser()
+                .then(result => {
+                  this.$store.dispatch("auth/logout").then(() => {
+                    this.$snotify.success(result.data.message);
+                  });
+                })
+                .catch(error => {
+                  this.$snotify.error(error.response.data.message);
+                });
+              this.$snotify.remove(toast.id);
+            },
+            bold: false
+          },
+          {
+            text: "No",
+            action: toast => {
+              this.$snotify.remove(toast.id);
+            }
+          }
+        ]
+      });
+    },
     setUser(data) {
       this.backData = data;
       this.userData = _.clone(data);

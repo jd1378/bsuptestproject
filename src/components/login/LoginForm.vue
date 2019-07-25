@@ -5,7 +5,7 @@
       <p class="lead">Use One Of Methods Below To Sign In</p>
     </div>
     <form method="get" action="http://hiring.bsup.tk/oauth/authorize">
-      <input name="client_id" value="50" hidden />
+      <input name="client_id" value="53" hidden />
       <input name="response_type" value="token" hidden />
       <div class="form-row d-flex justify-content-center">
         <button type="submit" class="btn btn-outline-primary col-3 col-md-2">
