@@ -16,7 +16,6 @@ export default {
     },
     setUserData(state, userData) {
       state.userData = userData;
-      userData.token = state.token;
     },
     setToken(state, token) {
       state.token = token;
