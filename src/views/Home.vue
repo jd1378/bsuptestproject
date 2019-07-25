@@ -1,8 +1,6 @@
 <template>
-  <div class="container">
-    <LoginForm v-if="!isLoggedIn"></LoginForm>
-    <ProfileForm v-else></ProfileForm>
-  </div>
+  <LoginForm v-if="!isLoggedIn"></LoginForm>
+  <ProfileForm v-else></ProfileForm>
 </template>
 
 <script>

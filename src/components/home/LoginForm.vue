@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <div class="py-5 text-center">
       <h2>Personal Library</h2>
       <p class="lead">Use One Of Methods Below To Sign In</p>

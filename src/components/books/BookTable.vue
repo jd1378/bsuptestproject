@@ -1,26 +1,24 @@
 <template>
-  <div class="container p-3">
-    <div class="card text-center">
-      <div class="card-header d-flex justify-content-between">
-        <h4>Books</h4>
-        <input
-          type="text"
-          class="form-control col-4"
-          placeholder="Search"
-          v-model="search"
-        />
-        <button class="btn btn-success" @click.stop="addBook">
-          Add
-        </button>
-      </div>
-      <div class="card-body">
-        <DataTable
-          :url="url"
-          :search="search"
-          :dataFilter="filter"
-          :actions="actions"
-        ></DataTable>
-      </div>
+  <div class="card text-center">
+    <div class="card-header d-flex justify-content-between">
+      <h4>Books</h4>
+      <input
+        type="text"
+        class="form-control col-4"
+        placeholder="Search"
+        v-model="search"
+      />
+      <button class="btn btn-success" @click.stop="addBook">
+        Add
+      </button>
+    </div>
+    <div class="card-body">
+      <DataTable
+        :url="url"
+        :search="search"
+        :dataFilter="filter"
+        :actions="actions"
+      ></DataTable>
     </div>
   </div>
 </template>

@@ -1,7 +1,9 @@
 <template>
   <div id="app" class="bg-light">
     <app-navbar></app-navbar>
-    <router-view></router-view>
+    <div class="container p-3">
+      <router-view></router-view>
+    </div>
     <vue-snotify></vue-snotify>
   </div>
 </template>
