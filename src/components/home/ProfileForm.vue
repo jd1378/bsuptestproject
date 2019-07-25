@@ -6,7 +6,10 @@
         Edit
       </button>
     </div>
-    <form @submit.prevent="checkForm">
+    <div v-if="loading">
+      <div class="spinner-border p-5 m-5"></div>
+    </div>
+    <form @submit.prevent="checkForm" v-else>
       <fieldset :disabled="submitting">
         <div class="card-body">
           <img class="img-fluid" :src="backData.photo" alt="user picture" />
@@ -94,17 +97,19 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 import _ from "lodash";
-import Error from "../Error.vue";
+import Error from "@/components/Error.vue";
+import userService from "@/services/user.service";
 
 export default {
   data() {
     return {
+      backData: {},
       userData: {},
       editmode: false,
       errors: [],
-      submitting: false
+      submitting: false,
+      loading: true
     };
   },
   components: {
@@ -116,12 +121,13 @@ export default {
     },
     isChangingPass() {
       return !!this.userData.password;
-    },
-    ...mapGetters("user", {
-      backData: "userData"
-    })
+    }
   },
   methods: {
+    setUser(data) {
+      this.backData = data;
+      this.userData = _.clone(data);
+    },
     cancelEdit() {
       this.userData = this.backData;
       this.errors = [];
@@ -146,13 +152,14 @@ export default {
           () =>
             new Promise((resolve, reject) => {
               // start checking token
-              this.$store
-                .dispatch(
-                  "user/editUser",
+              userService
+                .editUser(
                   // no falsy values to be sent
                   _.pickBy(this.userData, _.identity)
                 )
-                .then(() => {
+                .then(result => {
+                  this.setUser(result.data.data);
+
                   //success
                   this.toggleEdit();
                   resolve({
@@ -189,8 +196,13 @@ export default {
       this.editmode = !this.editmode;
     }
   },
-  created() {
-    this.userData = _.clone(this.backData);
+  async created() {
+    try {
+      this.setUser(await userService.getUser());
+      this.loading = false;
+    } catch (err) {
+      this.$router.go("/");
+    }
   }
 };
 </script>

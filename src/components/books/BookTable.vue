@@ -14,7 +14,7 @@
     </div>
     <div class="card-body">
       <DataTable
-        :url="url"
+        url="/books"
         :search="search"
         :dataFilter="filter"
         :actions="actions"
@@ -24,11 +24,11 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
-import urls from "../../utils/urls";
+import bookService from "@/services/book.service";
+
 export default {
   components: {
-    DataTable: () => import("./DataTable.vue")
+    DataTable: () => import("@/components/books/DataTable.vue")
   },
   data() {
     return {
@@ -47,22 +47,14 @@ export default {
       search: ""
     };
   },
-  computed: {
-    url() {
-      return urls.books;
-    }
-  },
+  computed: {},
   methods: {
-    ...mapMutations({
-      setSelectedBook: "book/setSelectedBook"
-    }),
     addBook() {
       this.$router.push({ name: "addBook" });
     },
 
     editBook(book) {
       return new Promise(resolve => {
-        this.setSelectedBook(book);
         this.$router.push({ name: "editBook", params: { id: book.id } });
         resolve();
       });
@@ -79,13 +71,16 @@ export default {
             {
               text: "Yes",
               action: toast => {
-                this.$store
-                  .dispatch("book/deleteBook", book.id)
-                  .then(result => this.$snotify.success(result.data.message))
-                  .catch(error =>
-                    this.$snotify.error(error.response.data.message)
-                  )
-                  .then(resolve);
+                bookService
+                  .deleteBook(book.id)
+                  .then(result => {
+                    this.$snotify.success(result.data.message);
+                    resolve();
+                  })
+                  .catch(error => {
+                    this.$snotify.error(error.response.data.message);
+                    reject();
+                  });
                 this.$snotify.remove(toast.id);
               },
               bold: false

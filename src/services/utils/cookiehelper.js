@@ -27,9 +27,9 @@ const getCookie = cname => {
 /** sets a cookie
  * @param {String} cname - cookie name
  * @param {String} value - cookie value
- * @param {Number} exSec - expire in seconds
+ * @param {Number} exSec - expire in seconds (1 year if not provided)
  */
-const setCookie = (cname, cvalue, exSec) => {
+const setCookie = (cname, cvalue, exSec = 31536000) => {
   var d = new Date();
   d.setTime(d.getTime() + exSec * 1000);
   var expires = "expires=" + d.toUTCString();

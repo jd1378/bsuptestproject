@@ -5,7 +5,7 @@
         <button class="btn btn-danger" @click.stop="cancel">
           Cancel
         </button>
-        <h4>{{ this.editing ? "Edit Book" : "Add Book" }}</h4>
+        <h4>{{ editing ? "Edit Book" : "Add Book" }}</h4>
         <button type="submit" class="btn btn-success">
           {{ editing ? "Done" : "Submit" }}
         </button>
@@ -16,7 +16,10 @@
         class="m-2"
         :msg="errormsg"
       ></Error>
-      <fieldset :disabled="submitting">
+      <div v-if="!loaded && editing">
+        <div class="spinner-border p-5 m-5"></div>
+      </div>
+      <fieldset :disabled="submitting" v-else>
         <div
           class="card-body d-flex justify-content-start align-content-center"
         >
@@ -84,8 +87,10 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 import _ from "lodash";
+import bookService from "@/services/book.service";
+
 export default {
   name: "BookForm",
   components: {
@@ -95,7 +100,8 @@ export default {
     return {
       submitting: false,
       errors: [],
-      book: {}
+      book: {},
+      loaded: false
     };
   },
   props: {
@@ -106,9 +112,7 @@ export default {
     }
   },
   computed: {
-    ...mapState("book", {
-      selectedBook: state => state.selectedBook
-    })
+    ...mapGetters(["selectedBook"])
   },
 
   methods: {
@@ -119,17 +123,16 @@ export default {
       this.submitting = true;
       let errors = [];
       let notifyBody = this.editing ? "Edit" : "Add";
-      let method = this.editing ? "editBookInfo" : "addBook";
+      let method = this.editing ? bookService.editBook : bookService.addBook;
       this.$snotify.async(
         notifyBody + "ing...",
         () =>
           new Promise((resolve, reject) => {
-            this.$store
-              .dispatch(
-                "book/" + method,
-                // no falsy values to be sent
-                _.pickBy(this.book, _.identity)
-              )
+            method(
+              // no falsy values to be sent
+              _.pickBy(this.book, _.identity),
+              this.book.id
+            )
               .then(() => {
                 //success
                 this.$router.push({ name: "books" });
@@ -165,18 +168,15 @@ export default {
   },
   created() {
     if (this.editing) {
-      if (!this.selectedBook) {
-        this.$store
-          .dispatch("book/getBookInfo", this.$route.params.id)
-          .then(() => {
-            this.book = _.clone(this.selectedBook);
-          })
-          .catch(() => {
-            this.$router.push({ name: "books" });
-          });
-      }
-
-      this.book = _.clone(this.selectedBook);
+      bookService
+        .getBookInfo(this.$route.params.id)
+        .then(bookInfo => {
+          this.book = bookInfo;
+          this.loaded = true;
+        })
+        .catch(() => {
+          this.$router.push({ name: "books" });
+        });
     }
   }
 };

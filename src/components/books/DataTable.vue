@@ -13,7 +13,7 @@
         {{
           meta.total
         }}
-        <i class="fa fa-spinner fa-spin" :hidden="!working"></i>
+        <i class="spinner-border spinner-border-sm" :hidden="!working"></i>
       </caption>
       <thead>
         <tr>

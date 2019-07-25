@@ -59,6 +59,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   data() {
     return {
@@ -67,12 +69,13 @@ export default {
     };
   },
   methods: {
+    ...mapActions("auth", {
+      login: "login"
+    }),
     setAuth() {
-      if (this.PATValue.trim()) {
-        this.$router.push({
-          name: "authback",
-          query: { access_token: this.PATValue.trim(), expires_in: 9999999 }
-        });
+      let token = this.PATValue.trim();
+      if (token) {
+        this.login({ token: token });
       }
     }
   }

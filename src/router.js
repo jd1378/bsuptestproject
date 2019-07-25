@@ -1,7 +1,7 @@
 import Vue from "vue";
-import store from "./store";
 import Router from "vue-router";
-import Home from "./views/Home.vue";
+
+import { TokenService } from "@/services/storage.service";
 Vue.use(Router);
 
 const router = new Router({
@@ -10,19 +10,26 @@ const router = new Router({
     {
       path: "/",
       name: "home",
-      component: Home
+      component: () => import("@/views/Home.vue")
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: () => import("@/views/Login.vue"),
+      meta: {
+        public: true, // Allow access to even if not logged in
+        onlyWhenLoggedOut: true // Redirect if user is logged in
+      }
     },
     {
       path: "/books",
       name: "books",
-      // lazy loading
-      component: () => import("./components/books/BookTable.vue")
+      component: () => import("@/components/books/BookTable.vue")
     },
     {
       path: "/books/add",
       name: "addBook",
-      // lazy loading
-      component: () => import("./components/books/BookForm.vue"),
+      component: () => import("@/components/books/BookForm.vue"),
       props: {
         editing: false
       }
@@ -30,22 +37,25 @@ const router = new Router({
     {
       path: "/books/:id",
       name: "editBook",
-      // lazy loading
-      component: () => import("./components/books/BookForm.vue")
+      component: () => import("@/components/books/BookForm.vue")
     },
     {
       path: "/authback",
       name: "authback",
-      component: () => import("./views/AuthBack.vue"),
+      component: () => import("@/views/AuthBack.vue"),
       props: route => ({
         token: route.query.access_token,
         expiresIn: route.query.expires_in
-      })
+      }),
+      meta: {
+        public: true, // Allow access to even if not logged in
+        onlyWhenLoggedOut: true // Redirect if user is logged in
+      }
     },
     {
       path: "/404",
       name: "notfound",
-      component: () => import("./components/Error.vue"),
+      component: () => import("@/components/Error.vue"),
       props: {
         msg: "(404) Page not found"
       }
@@ -59,12 +69,24 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.name !== "authback" && to.name !== "home") {
-    if (!store.getters["user/isLoggedIn"]) {
-      next({ name: "home" });
-      return;
-    }
+  const isPublic = to.matched.some(record => record.meta.public);
+  const onlyWhenLoggedOut = to.matched.some(
+    record => record.meta.onlyWhenLoggedOut
+  );
+  const isLoggedIn = !!TokenService.getToken();
+
+  if (!isPublic && !isLoggedIn) {
+    return next({
+      path: "/login",
+      query: { redirect: to.fullPath } // Store the full path to redirect the user to after login
+    });
   }
+
+  // Do not allow user to visit login page or register page if they are logged in
+  if (isLoggedIn && onlyWhenLoggedOut) {
+    return next("/");
+  }
+
   next();
 });
 

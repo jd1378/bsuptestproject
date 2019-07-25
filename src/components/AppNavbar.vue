@@ -18,8 +18,8 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import BNavbar from "./bootstrap/BNavbar.vue";
-import { deleteCookie } from "../utils/cookiehelper";
+import BNavbar from "@/components/bootstrap/BNavbar.vue";
+import userService from "@/services/user.service";
 
 export default {
   name: "AppNavbar",
@@ -28,21 +28,20 @@ export default {
   },
   computed: {
     ...mapGetters({
-      isLoggedIn: "user/isLoggedIn"
+      isLoggedIn: "auth/isLoggedIn"
     })
   },
   methods: {
-    ...mapActions("user", {
-      logoutUser: "logoutUser"
+    ...mapActions({
+      logoutAction: "auth/logout"
     }),
     logout() {
       this.$snotify.async(
         "Logging out",
         () =>
           new Promise((resolve, reject) => {
-            this.logoutUser()
+            this.logoutAction()
               .then(() => {
-                deleteCookie("accessToken");
                 resolve({
                   body: "Logout successful",
                   config: {

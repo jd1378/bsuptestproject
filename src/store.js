@@ -1,23 +1,20 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import Book from "./store/book";
-import User from "./store/user";
+import auth from "@/store/auth";
 
 Vue.use(Vuex);
 
+const state = {};
+
+const mutations = {};
+
+const getters = {};
+
 export default new Vuex.Store({
-  state: {
-    addingBook: false
-  },
-  mutations: {
-    setAddingBook(state, value) {
-      state.addingBook = value;
-    }
-  },
-  actions: {},
+  state,
+  getters,
+  mutations,
   modules: {
-    book: Book,
-    user: User
-  },
-  getters: {}
+    auth: auth
+  }
 });

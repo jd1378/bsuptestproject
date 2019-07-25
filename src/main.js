@@ -1,29 +1,28 @@
 import Vue from "vue";
-import App from "./App.vue";
-import store from "./store";
-import router from "./router";
-import axios from "axios";
+import App from "@/App.vue";
+import store from "@/store";
+import router from "@/router";
 import Snotify from "vue-snotify";
+import { TokenService } from "@/services/storage.service";
+import ApiService from "@/services/api.service";
 
 // custom styles + bootstrap styles
-import "./assets/css/custom.scss";
+import "@/assets/css/custom.scss";
 
 Vue.config.productionTip = false;
 
-// config axios globally
-// axios.defaults.baseUrl = "http://hiring.bsup.tk/api"
-axios.defaults.headers.post["Content-Type"] = "application/json";
-axios.defaults.timeout = 5 * 1000;
-// sets auth header whenever making a request
-axios.interceptors.request.use(config => {
-  const token = store.getters["user/token"];
+// Set the base URL of the API
+ApiService.init(
+  process.env.VUE_APP_ROOT_API ? process.env.VUE_APP_ROOT_API : ""
+);
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  return config;
-});
+// If token exists set header
+if (TokenService.getToken()) {
+  ApiService.setAuthHeader();
+  ApiService.mount401Interceptor();
+}
+ApiService.setHeader("Accept", "application/json");
+ApiService.setTimout(5 * 1000);
 
 Vue.use(Snotify);
 
