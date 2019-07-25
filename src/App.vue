@@ -9,11 +9,9 @@
 </template>
 
 <script>
-import AppNavbar from "./components/AppNavbar.vue";
-
 export default {
   components: {
-    AppNavbar
+    AppNavbar: () => import("./components/AppNavbar.vue")
   },
   created() {
     //all it does is to login automatically whenever token changes
